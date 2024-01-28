@@ -1,0 +1,28 @@
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Current SDK version is 0.16.2
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Configure stats pid to 24106
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Loading settings from /home/arvindcar/.config/wandb/settings
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Loading settings from /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/wandb/settings
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Loading settings from environment variables: {}
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Applying setup settings: {'_disable_service': False}
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Inferring run settings from compute environment: {'program_relpath': 'VINN-ACT/representation_models/BYOL.py', 'program_abspath': '/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py', 'program': '/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py'}
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_setup.py:_flush():76] Applying login settings: {'api_key': '***REDACTED***'}
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:_log_setup():526] Logging user logs to /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/wandb/run-20240128_150430-ogt0dqe5/logs/debug.log
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:_log_setup():527] Logging internal logs to /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/wandb/run-20240128_150430-ogt0dqe5/logs/debug-internal.log
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:init():566] calling init triggers
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:init():573] wandb.init called with sweep_config: {}
+config: {}
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:init():616] starting backend
+2024-01-28 15:04:30,562 INFO    MainThread:24106 [wandb_init.py:init():620] setting up manager
+2024-01-28 15:04:30,564 INFO    MainThread:24106 [backend.py:_multiprocessing_setup():105] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2024-01-28 15:04:30,566 INFO    MainThread:24106 [wandb_init.py:init():628] backend started and connected
+2024-01-28 15:04:30,574 INFO    MainThread:24106 [wandb_init.py:init():720] updated telemetry
+2024-01-28 15:04:30,578 INFO    MainThread:24106 [wandb_init.py:init():753] communicating run to backend with 90.0 second timeout
+2024-01-28 15:04:30,811 ERROR   MainThread:24106 [wandb_init.py:init():779] encountered error: It appears that you do not have permission to access the requested resource. Please reach out to the project owner to grant you access. If you have the correct permissions, verify that there are no issues with your networking setup.(Error 403: Forbidden)
+2024-01-28 15:04:30,943 ERROR   MainThread:24106 [wandb_init.py:init():1194] It appears that you do not have permission to access the requested resource. Please reach out to the project owner to grant you access. If you have the correct permissions, verify that there are no issues with your networking setup.(Error 403: Forbidden)
+Traceback (most recent call last):
+  File "/home/arvindcar/.local/lib/python3.10/site-packages/wandb/sdk/wandb_init.py", line 1176, in init
+    run = wi.init()
+  File "/home/arvindcar/.local/lib/python3.10/site-packages/wandb/sdk/wandb_init.py", line 785, in init
+    raise error
+wandb.errors.CommError: It appears that you do not have permission to access the requested resource. Please reach out to the project owner to grant you access. If you have the correct permissions, verify that there are no issues with your networking setup.(Error 403: Forbidden)
+2024-01-28 15:04:31,966 WARNING MsgRouterThr:24106 [router.py:message_loop():77] message_loop has been closed

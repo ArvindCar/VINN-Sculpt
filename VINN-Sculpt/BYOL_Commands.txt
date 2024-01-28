@@ -1,0 +1,12 @@
+python /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py	--batch_size 168 \
+					--root_dir /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/ \
+					--folder /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/X_Datasets \
+					--dataset X_Datasets \
+					--extension X \
+					--img_size 224 \
+					--epochs 101 \
+					--wandb 1 \
+					--gpu 0 \
+					--hidden_layer avgpool \
+					--pretrained 1 \
+					--save_dir /home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/X_chkpts/
