@@ -39,8 +39,7 @@ if __name__ == '__main__':
         wandb.run.name = "Pretrained_" + str(params['pretrained'])
 
     sys.path.append(params['root_dir'] + 'dataloaders')
-    from PushDataset import PushDataset
-    from HandleDataset import HandleDataset
+    from dataloaders.XDataset import XDataset
 
     customAug = T.Compose([T.RandomResizedCrop(params['img_size'], scale=(0.6,1.0)),
                             T.RandomApply(torch.nn.ModuleList([T.ColorJitter(.8,.8,.8,.2)]), p=.3),
@@ -50,10 +49,10 @@ if __name__ == '__main__':
                             mean=torch.tensor([0.485, 0.456, 0.406]),
                             std=torch.tensor([0.229, 0.224, 0.225]))])
 
-    if(params['dataset'] == 'HandleData'):
-        img_data = HandleDataset(params, None)
-    if(params['dataset'] == 'PushDataset' or params['dataset'] == 'StackDataset'):
-        img_data = PushDataset(params, None)
+    if(params['dataset'] == 'XData'):
+        img_data = XDataset(params, None)
+    # if(params['dataset'] == 'PushDataset' or params['dataset'] == 'StackDataset'):
+    #     img_data = PushDataset(params, None)
 
     if(params['pretrained'] == 1):
         model = models.resnet50(pretrained=True)
