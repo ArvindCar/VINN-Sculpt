@@ -1,12 +1,12 @@
-python /home/acar/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py --batch_size 168 \
---root_dir /home/acar/VINN/VINN-Sculpt/VINN-ACT/ \
---folder /home/acar/VINN/VINN-Sculpt/X_Datasets \
+python /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py --batch_size 6 \
+--root_dir /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/ \
+--folder /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/X_Datasets \
 --dataset X_Datasets \
 --extension X \
 --img_size 224 \
 --epochs 101 \
 --wandb 1 \
---gpu 0 \
+--gpu 1 \
 --hidden_layer avgpool \
 --pretrained 1 \
---save_dir /home/acar/VINN/VINN-Sculpt/X_chkpts/
+--save_dir /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/X_chkpts/
