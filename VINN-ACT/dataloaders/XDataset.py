@@ -60,21 +60,24 @@ class XDataset(Dataset):
                     self.img_tensors.append(img_tensor.detach())
                     if(self.params['bc_model'] == 'BC_Full'):
                         self.translation.append(torch.FloatTensor(action_dict[frame][0:3]))
-                        self.rotation.append(torch.FloatTensor(action_dict[frame][3:6]))
-                        self.gripper.append(torch.tensor([action_dict[frame][6]]))
+                        self.rotation.append(torch.FloatTensor([action_dict[frame][3]]))
+                        self.gripper.append(torch.FloatTensor([action_dict[frame][4]]))
                         self.paths.append(runs[run_index]+'/'+frame)
                         self.path_dict[runs[run_index]].append(frame)
                         self.frame_index[runs[run_index] + '/' + frame] = index
 
                 else:
-                    represnetation = self.encoder.encode(img_tensor)[0]
-                    self.representations.append(represnetation.detach())
-                    self.translation.append(torch.FloatTensor(action_dict[frame][0:3]))
-                    self.rotation.append(torch.FloatTensor(action_dict[frame][3:6]))
-                    self.gripper.append(torch.tensor([action_dict[frame][6]]))
-                    self.paths.append(runs[run_index]+'/'+frame)
-                    self.path_dict[runs[run_index]].append(frame)
-                    self.frame_index[runs[run_index] + '/' + frame] = index
+                    if frame in action_dict and len(action_dict[frame]) >= 5:
+                        represnetation = self.encoder.encode(img_tensor)[0]
+                        self.representations.append(represnetation.detach())
+                        self.translation.append(torch.FloatTensor(action_dict[frame][0:3]))
+                        self.rotation.append(torch.FloatTensor([action_dict[frame][3]]))
+                        self.gripper.append(torch.FloatTensor([action_dict[frame][4]]))
+                        self.paths.append(runs[run_index]+'/'+frame)
+                        self.path_dict[runs[run_index]].append(frame)
+                        self.frame_index[runs[run_index] + '/' + frame] = index
+                    else:
+                        print("Help")
                 index += 1
 
     def get_subset(self, factor):
