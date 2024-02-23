@@ -33,10 +33,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     params = vars(args)
     params['representation'] = 1
-    wandb.init(project = 'VINN-Sculpt', entity='arvindcar')
-    if(params['wandb'] == 1):
-        wandb.init(project = 'imitation_byol_v2_' + params['extension'], entity="nyu_vinn")
-        wandb.run.name = "Pretrained_" + str(params['pretrained'])
+    # wandb.init(project = 'VINN-Sculpt', entity='arvindcar')
+    # if(params['wandb'] == 1):
+    #     wandb.init(project = 'imitation_byol_v2_' + params['extension'], entity="nyu_vinn")
+    #     wandb.run.name = "Pretrained_" + str(params['pretrained'])
 
     sys.path.append(params['root_dir'] + 'dataloaders')
     print(sys.path)
