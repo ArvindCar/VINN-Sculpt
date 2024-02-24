@@ -26,7 +26,7 @@ class VINN_Img():
         for i in range(k):
             translation = torch.add(top_k_weights[i]*dist_list[i][1], translation)
             rotation = torch.add(top_k_weights[i]*dist_list[i][2], rotation)
-            gripper = torch.add(top_k_weights[i]*dist_list[i][3], translation)
+            gripper = torch.add(top_k_weights[i]*dist_list[i][3], gripper)
         action = torch.cat((translation, rotation, gripper))
         return(action)
 
