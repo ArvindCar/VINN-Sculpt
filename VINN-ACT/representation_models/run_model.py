@@ -1,6 +1,10 @@
 import torch
 from torch import nn
 from torchvision import models
+import sys
+pointbert_path = '/'.join('/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT'.split('/')[:-3]) + '/point_cloud_embedding'
+sys.path.append(pointbert_path)
+from PointBERTwEncoder import PointBERTWithProjection
 
 class Identity(nn.Module):
     '''
@@ -51,10 +55,16 @@ class Encoder():
                 if(params['architecture'] == 'AlexNet'):
                     self.model.classifier = Identity()
 
+        if(params['model'] == 'PointBERT'):
+            pointbert_path = '/'.join('/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT'.split('/')[:-3]) + '/point_cloud_embedding'
+            self.model = PointBERTWithProjection(pointbert_path=pointbert_path)
+            encoder_state_dict = torch.load(params['root_dir'] + params['representation_model_path'], map_location=torch.device('cpu'))
+            self.model.load_state_dict(encoder_state_dict['model_state_dict'])
+            # self.model.fc = Identity()
+
         if(params['model'] == 'ImageNet'):
             if(params['architecture'] == 'ResNet'):
                 self.model = models.resnet50(pretrained=True)
-                print('hi')
                 self.model.fc = Identity()
             if(params['architecture'] == 'AlexNet'):
                 self.model = models.alexnet(pretrained=False)
@@ -71,4 +81,8 @@ class Encoder():
             self.model.eval()
 
     def encode(self, x):
-        return(self.model(x.reshape(1,3,self.params['img_size'],self.params['img_size'])))
+            if x.numel() == 2048*3:
+                return(self.model(x.reshape(1,self.params['img_size'],3).contiguous()))
+            return(self.model(x.reshape(1,3,self.params['img_size'],self.params['img_size'])))
+    
+            
