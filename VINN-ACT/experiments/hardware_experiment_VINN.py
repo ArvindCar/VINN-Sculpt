@@ -99,8 +99,8 @@ def experiment_loop(fa, cam2, cam3, cam4, cam5, pcl_vis, save_path, goal, done_q
     print("Earth Mover's Distance: ", earthmovers)
     print("Hausdorff Distance: ", hausdorff_dist)
 
-    root_dir = 
-    chkpts_dir = 
+    root_dir = '/home/arvind/VINN-Sculpt/VINN-Sculpt/VINN-ACT/'
+    chkpts_dir = 'chkpts/BYOL_100_X_batch_30.pt'
     baseline = VINN_Img(root_dir, chkpts_dir)
 
 
@@ -212,12 +212,12 @@ if __name__ == '__main__':
     # -------------------------------------------------------------------
 
 
-    exp_save = '/home/arvind/sculpt-act_baseline/scripts/Experiments/Exp' + str(exp_num)
+    exp_save = '/home/arvind/VINN-Sculpt/Experiments/Exp' + str(exp_num)
 
     # check to make sure the experiment number is not already in use, if it is, increment the number to ensure no save overwrites
     while os.path.exists(exp_save):
         exp_num += 1
-        exp_save = '/home/arvind/sculpt-act_baseline/scripts/Experiments/Exp' + str(exp_num)
+        exp_save = '/home/arvind/VINN-Sculpt/Experiments/Exp' + str(exp_num)
 
     # make the experiment folder
     os.mkdir(exp_save)

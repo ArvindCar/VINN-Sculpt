@@ -4,7 +4,7 @@ from torchvision import models
 import sys
 pointbert_path = '/'.join('/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT'.split('/')[:-3]) + '/point_cloud_embedding'
 sys.path.append(pointbert_path)
-from PointBERTwEncoder import PointBERTWithProjection
+# from PointBERTwEncoder import PointBERTWithProjection
 
 class Identity(nn.Module):
     '''

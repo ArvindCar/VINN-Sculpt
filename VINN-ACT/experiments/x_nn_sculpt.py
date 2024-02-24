@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import robomail.vision as vis
 import open3d as o3d
+from PIL import Image
+import torchvision.transforms as T
 
 class VINN_Img():
     
@@ -35,54 +37,68 @@ class VINN_Img():
     def calculate_nearest_neighbors(self, img_embedding, dataset, k):
         loss = [0 for i in range(k)]
         selected_paths = []
+        dist_list = []
+        # print(len(dataset))
         for dataset_index in range(len(dataset)):
 
             dataset_embedding, dataset_translation, dataset_rotation, dataset_gripper, dataset_path = dataset[dataset_index]
+            print("Translation:",dataset_translation)
+            print("Rotation:",dataset_rotation)
+            print("This:",dataset_gripper)
             distance = self.dist_metric(img_embedding, dataset_embedding)
             dist_list.append((distance, dataset_translation, dataset_rotation, dataset_gripper, dataset_path))
 
         dist_list = sorted(dist_list, key = lambda tup: tup[0])
+        print("First Elem:",dist_list[0][1], dist_list[0][2], dist_list[0][3])
         pred_action = self.calculate_action(dist_list, k)
         selected_paths.append(([self.extract_image(dist_list[j][4]) for j in range(k)]))
-        print(selected_paths)
+        print("Nearest States:", selected_paths)
+        print("Predicted Action:", pred_action)
         return pred_action
 
 
-    def __init__(self, root_dir, chkpts_dir):
-        params = {}
-        params['root_dir'] = root_dir  #'/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/' # This was changed
-        params['img_size'] = 624
-        params['layer'] = 'avgpool'
-        params['model'] = 'BYOL'
-        params['representation_model_path'] = chkpts_dir # This was changed
-        params['eval'] = 0
-        params['representation'] = 0
-        params['dataset'] = 'X_Datasets'
-        params['architecture'] = 'ResNet'
-        params['t'] = 0
+    def __init__(self, root_dir, chkpts):
+        self.params = {}
+        self.params['root_dir'] = root_dir  #'/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/' # This was changed
+        self.params['img_size'] = 624
+        self.params['layer'] = 'avgpool'
+        self.params['model'] = 'BYOL'
+        self.params['representation_model_path'] = chkpts # This was changed
+        self.params['eval'] = 0
+        self.params['representation'] = 0
+        self.params['dataset'] = 'X_Datasets'
+        self.params['architecture'] = 'ResNet'
+        self.params['t'] = 0
 
 
-        sys.path.append(params['root_dir'] + 'representation_models')
-        sys.path.append(params['root_dir'] + 'dataloaders')
-        print(sys.path)
+        sys.path.append(self.params['root_dir'] + 'representation_models')
+        sys.path.append(self.params['root_dir'] + 'dataloaders')
+        # print(sys.path)
         from run_model import Encoder
         from XDataset import XDataset
 
-        self.encoder = Encoder(params)
-        params['folder'] =  '/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT/representation_data/X_all/train_all' # '/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_data/X_all/train_all'
-        self.train_dataset = XDataset(params, self.encoder)
+        self.encoder = Encoder(self.params)
+        self.params['folder'] =  '/home/arvind/VINN-Sculpt/VINN-Sculpt/VINN-ACT/representation_data/X_all/train_all' # '/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_data/X_all/train_all'
+        self.train_dataset = XDataset(self.params, self.encoder)
         self.mseLoss = torch.nn.MSELoss()
         # ceLoss = torch.nn.CrossEntropyLoss()
         self.softmax = torch.nn.Softmax(dim=0)
+
+        self.preprocess = T.Compose([T.ToTensor(),
+                                    T.Resize((self.params['img_size'],self.params['img_size'])),
+                                    T.Normalize(
+                                    mean=[0.485, 0.456, 0.406],
+                                    std=[0.229, 0.224, 0.225])])
 
     def next_action(self, pc2, pc3, pc4, pc5):
         vis1 = o3d.visualization.Visualizer()
         vis1.create_window()
         pcl_vis = vis.Vision3D()
-        pc2.transform(pcl_vis.camera_transforms[2])
-        pc3.transform(pcl_vis.camera_transforms[3])
-        pc4.transform(pcl_vis.camera_transforms[4])
-        pc5.transform(pcl_vis.camera_transforms[5])
+        # pcl_vis.get_point_cloud_elevated_stage(pc2,pc3,pc4,pc5,no_transformation=True)
+        # pc2.transform(pcl_vis.camera_transforms[2])
+        # pc3.transform(pcl_vis.camera_transforms[3])
+        # pc4.transform(pcl_vis.camera_transforms[4])
+        # pc5.transform(pcl_vis.camera_transforms[5])
 
         # combine the point clouds
         pointcloud = o3d.geometry.PointCloud()
@@ -94,7 +110,7 @@ class VINN_Img():
         pointcloud.colors.extend(pc3.colors)
         pointcloud.points.extend(pc4.points)
         pointcloud.colors.extend(pc4.colors)
-
+        
         # remove statistical outliers
         pointcloud, ind = pointcloud.remove_statistical_outlier(
             nb_neighbors=20, std_ratio=2.0
@@ -102,15 +118,19 @@ class VINN_Img():
         
         # crop point cloud
         pointcloud = pcl_vis.remove_stage_grippers(pointcloud) # Change ind_z_upper in Vision3D.remove_stage_grippers if you want the stage to be in frame
+
         pointcloud = pcl_vis.remove_background(
-        pointcloud, radius=0.15, center=np.array([0.6, -0.05, 0.3]) # change radius to 0.3 if you want the goal shape to be in frame
+        pointcloud, radius=0.3, center=np.array([0.6, -0.05, 0.1]) # change radius to 0.3 if you want the goal shape to be in frame
         )
         vis1.add_geometry(pointcloud)
         pc_img = vis1.capture_screen_float_buffer(True)
-        vis1.remove_geometry(pointcloud)
-        img_tensor = torch.tensor(pc_img)
+        plt.imsave(self.params['root_dir'] + '/' + 'CurrentState.jpg', np.asarray(pc_img))
+        img_PIL = Image.open(self.params['root_dir'] + '/' + 'CurrentState.jpg')
+        img_PIL = img_PIL.crop((410, 0, 1600, 697))
+        img_tensor = self.preprocess(img_PIL)
+        img_PIL.close()
         img_embedding = self.encoder.encode(img_tensor)
-        next_action = self.calculate_nearest_neighbors(img_embedding, self.train_dataset, 50)
+        next_action = self.calculate_nearest_neighbors(img_embedding, self.train_dataset, 10)
         next_action = np.array(next_action)
         return next_action
 
