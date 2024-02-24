@@ -82,6 +82,9 @@ class Encoder():
 
     def encode(self, x):
             if x.numel() == 2048*3:
+                device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+                x=x.float().to(device)
+                # print(x.reshape(1,self.params['img_size'],3).contiguous().dtype)
                 return(self.model(x.reshape(1,self.params['img_size'],3).contiguous()))
             return(self.model(x.reshape(1,3,self.params['img_size'],self.params['img_size'])))
     
