@@ -1,0 +1,133 @@
+{
+    "os": "Linux-5.15.0-94-generic-x86_64-with-debian-bullseye-sid",
+    "python": "3.7.16",
+    "heartbeatAt": "2024-02-25T18:24:06.781848",
+    "startedAt": "2024-02-25T18:24:06.271701",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--batch_size",
+        "60",
+        "--root_dir",
+        "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT/",
+        "--folder",
+        "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/X_Datasets",
+        "--dataset",
+        "X_Datasets",
+        "--extension",
+        "X",
+        "--img_size",
+        "2048",
+        "--epochs",
+        "101",
+        "--wandb",
+        "1",
+        "--gpu",
+        "1",
+        "--hidden_layer",
+        "-1",
+        "--pretrained",
+        "1",
+        "--save_dir",
+        "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/X_chkpts/"
+    ],
+    "state": "running",
+    "program": "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT/representation_models/BYOL_PointBERT.py",
+    "codePathLocal": "VINN-ACT/representation_models/BYOL_PointBERT.py",
+    "codePath": "VINN-ACT/representation_models/BYOL_PointBERT.py",
+    "git": {
+        "remote": "https://github.com/ArvindCar/VINN-Sculpt.git",
+        "commit": "669e92ab465198a8f4a546f9a47b55269e53da76"
+    },
+    "email": "cararvind@gmail.com",
+    "root": "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt",
+    "host": "arvind-Alienware-Aurora-R7",
+    "username": "arvind",
+    "executable": "/home/arvind/anaconda3/envs/VINN-Sculpt/bin/python3",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 3745.4701666666665,
+        "min": 800.0,
+        "max": 5000.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 900.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 4000.0,
+            "min": 800.0,
+            "max": 5000.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 915.5654602050781,
+            "used": 73.50423049926758
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 2080 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2080 Ti",
+            "memory_total": 11811160064
+        }
+    ],
+    "memory": {
+        "total": 15.33199691772461
+    }
+}

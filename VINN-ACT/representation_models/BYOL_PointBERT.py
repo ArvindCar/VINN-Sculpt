@@ -37,32 +37,31 @@ class CustomPointCloudAugmentation:
 
     def __call__(self, pointcloud):
         # Perform custom augmentation on the point cloud
-        #TODO: Verify that the input to this needs to be a numpy
 
-        # Example: Randomly shuffle the order of points
-        pointcloud = self.shuffle_points(pointcloud)
+        # # Example: Randomly shuffle the order of points
+        # pointcloud = self.shuffle_points(pointcloud)
 
-        # Example: Randomly drop points to achieve the desired pointcloud_size
-        pointcloud = self.random_dropout(pointcloud)
+        # # Example: Randomly drop points to achieve the desired pointcloud_size
+        # pointcloud = self.random_dropout(pointcloud)
 
         # Additional custom augmentations can be added here
         pointcloud = self.shift_points(pointcloud)
 
         return pointcloud
 
-    def shuffle_points(self, pointcloud):
-        # Randomly shuffle the order of points in the point cloud
-        indices = torch.randperm(pointcloud.size(0))
-        return pointcloud[indices]
+    # def shuffle_points(self, pointcloud):
+    #     # Randomly shuffle the order of points in the point cloud
+    #     indices = torch.randperm(pointcloud.size(0))
+    #     return pointcloud[indices]
 
-    def random_dropout(self, pointcloud):
-        # Randomly drop points to achieve the desired pointcloud_size
-        if pointcloud.size(0) > self.pointcloud_size:
-            indices_to_keep = torch.randperm(pointcloud.size(0))[:self.pointcloud_size]
-            pointcloud = pointcloud[indices_to_keep]
-        return pointcloud
+    # def random_dropout(self, pointcloud):
+    #     # Randomly drop points to achieve the desired pointcloud_size
+    #     if pointcloud.size(0) > self.pointcloud_size:
+    #         indices_to_keep = torch.randperm(pointcloud.size(0))[:self.pointcloud_size]
+    #         pointcloud = pointcloud[indices_to_keep]
+    #     return pointcloud
 
-    def shift_points(self, pointcloud, max_shift=0.001):
+    def shift_points(self, pointcloud, max_shift=0):
         # Slightly shift each point in the point cloud
         shift_amounts = torch.rand_like(pointcloud) * 2 * max_shift - max_shift
         pointcloud = pointcloud + shift_amounts
