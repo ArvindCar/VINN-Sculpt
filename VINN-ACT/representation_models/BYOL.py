@@ -33,10 +33,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
     params = vars(args)
     params['representation'] = 1
-    # wandb.init(project = 'VINN-Sculpt', entity='arvindcar')
-    # if(params['wandb'] == 1):
-    #     wandb.init(project = 'imitation_byol_v2_' + params['extension'], entity="nyu_vinn")
-    #     wandb.run.name = "Pretrained_" + str(params['pretrained'])
+    wandb.init(project = 'VINN-Sculpt', entity='arvindcar')
+    if(params['wandb'] == 1):
+        wandb.init(project = 'imitation_byol_v2_' + params['extension'], entity="cmu_sculpt")
+        wandb.run.name = "Img_BatchSize_" + str(params['batch_size'])
 
     sys.path.append(params['root_dir'] + 'dataloaders')
     print(sys.path)
@@ -100,4 +100,4 @@ if __name__ == '__main__':
 
         if(epoch % 20  == 0):
             torch.save({'model_state_dict': model.state_dict()
-                    }, params['save_dir']+'BYOL_'+str(epoch)+'_'+params['extension']+'_pretrained_'+str(params['pretrained'])+'.pt')
+                    }, params['save_dir']+'BYOL_'+str(epoch)+'_'+params['extension']+'_batchsize_'+str(params['batch_size'])+'.pt')

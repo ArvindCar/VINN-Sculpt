@@ -68,8 +68,9 @@ class XDataset(Dataset):
 
                 else:
                     if frame in action_dict and len(action_dict[frame]) >= 5:
-                        represnetation = self.encoder.encode(img_tensor)[0]
-                        self.representations.append(represnetation.detach())
+                        representation = self.encoder.encode(img_tensor)[0]
+                        print("Representation Size (OG and [0]):",img_tensor.shape, representation.shape )
+                        self.representations.append(representation.detach())
                         self.translation.append(torch.FloatTensor(action_dict[frame][0:3]))
                         self.rotation.append(torch.FloatTensor([action_dict[frame][3]]))
                         self.gripper.append(torch.FloatTensor([action_dict[frame][4]]))

@@ -46,6 +46,8 @@ class XDataset_PC(Dataset):
             run = runs[run_index]
             action_file = open(run+'/labels.json', 'r')
             action_dict = json.load(action_file)
+            goal = np.load(run + '/images/goal.npy')
+            goal_tensor = torch.tensor(goal)
 
             for frame in action_dict:
                 try:
@@ -69,8 +71,12 @@ class XDataset_PC(Dataset):
 
                 else:
                     if frame in action_dict and len(action_dict[frame]) >= 5:
-                        represnetation = self.encoder.encode(img_tensor)[0]
-                        self.representations.append(represnetation.detach())
+                        representation = self.encoder.encode(img_tensor)[0]
+                        # print("Representation Size (OG and [0]):",self.encoder.encode(img_tensor).shape, representation.shape )
+                        goal_representation = self.encoder.encode(goal_tensor)[0]
+                        conditioned_representation = torch.cat((representation, goal_representation), dim = 0)
+                        # print("Final Size:", conditioned_representation.shape)
+                        self.representations.append(conditioned_representation.detach())
                         self.translation.append(torch.FloatTensor(action_dict[frame][0:3]))
                         self.rotation.append(torch.FloatTensor([action_dict[frame][3]]))
                         self.gripper.append(torch.FloatTensor([action_dict[frame][4]]))

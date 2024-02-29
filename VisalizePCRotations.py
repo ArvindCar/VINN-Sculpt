@@ -12,7 +12,7 @@ def load_np_file(folder_path, file_name):
 
 def iterate_folders_and_load_np_files(root_dir, file_name):
     i=0
-    for folder_name in os.listdir(root_dir):
+    for folder_name in sorted(os.listdir(root_dir)):
         i+=1
         folder_path = os.path.join(root_dir, folder_name)
 
@@ -25,14 +25,15 @@ def iterate_folders_and_load_np_files(root_dir, file_name):
             else:
                 pointcloud.points = o3d.utility.Vector3dVector(data)
                 pointcloud.colors = o3d.utility.Vector3dVector(np.tile((np.random.rand(3)), (len(data), 1)))
+            print(folder_name)
             o3d.visualization.draw_geometries([pointcloud])
 
 
 # Specify the root directory containing the folders
-root_directory = "/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/X_Datasets/"
+root_directory = "/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/PointClouds/Line"
 
 # Specify the name of the NumPy file you want to load from each folder
-desired_file_name = "images/0000.npy"
+desired_file_name = "images/goal.npy"
 
 # Call the function to iterate through folders and load the specified NumPy file
 iterate_folders_and_load_np_files(root_directory, desired_file_name)

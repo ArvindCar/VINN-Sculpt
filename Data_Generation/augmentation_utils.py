@@ -122,29 +122,31 @@ def augment_state_action(state, goal, center, action, rot, vis=False):
 
     # apply the action augmentation
     # need to apply a correction for calibration error if augmenting for visualization purposes
-    if vis:
-        new_action = action.copy()
-        new_action[0:3] = new_action[0:3] + np.array([0.03, 0, 0])
-        unit_circle_og_grasp = (new_action[0] - center[0], new_action[1] - center[1])
-    # if augmenting for dataset creation, no need to apply correction
-    else:
-        unit_circle_og_grasp = (action[0] - center[0], action[1] - center[1])
+    if action is not None:
+        if vis:
+            new_action = action.copy()
+            new_action[0:3] = new_action[0:3] + np.array([0.03, 0, 0])
+            unit_circle_og_grasp = (new_action[0] - center[0], new_action[1] - center[1])
+        # if augmenting for dataset creation, no need to apply correction
+        else:
+            unit_circle_og_grasp = (action[0] - center[0], action[1] - center[1])
 
-    rot_original = math.degrees(math.atan2(unit_circle_og_grasp[1], unit_circle_og_grasp[0]))
-    unit_circle_radius = math.sqrt(unit_circle_og_grasp[0]**2 + unit_circle_og_grasp[1]**2)
-    rot_new =  rot_original + rot
-
-    # NOTE: doesn't work slightly for grasps at edge of the clay (slight height variation)
-    new_unit_circle_grasp = (unit_circle_radius*math.cos(math.radians(rot_new)), unit_circle_radius*math.sin(math.radians(rot_new)))
     
-    new_global_grasp = (center[0] + new_unit_circle_grasp[0], center[1] + new_unit_circle_grasp[1])
-    x = new_global_grasp[0]
-    y = new_global_grasp[1]
-    rz = action[3] + rot
-    rz = wrap_rz(rz)
-    action_aug = np.array([x, y, action[2], rz, action[4]])
+        rot_original = math.degrees(math.atan2(unit_circle_og_grasp[1], unit_circle_og_grasp[0]))
+        unit_circle_radius = math.sqrt(unit_circle_og_grasp[0]**2 + unit_circle_og_grasp[1]**2)
+        rot_new =  rot_original + rot
 
-    return (pcl_aug, action_aug, goal_aug) if goal is not None else (pcl_aug, action_aug) if state is not None else (action_aug)
+        # NOTE: doesn't work slightly for grasps at edge of the clay (slight height variation)
+        new_unit_circle_grasp = (unit_circle_radius*math.cos(math.radians(rot_new)), unit_circle_radius*math.sin(math.radians(rot_new)))
+        
+        new_global_grasp = (center[0] + new_unit_circle_grasp[0], center[1] + new_unit_circle_grasp[1])
+        x = new_global_grasp[0]
+        y = new_global_grasp[1]
+        rz = action[3] + rot
+        rz = wrap_rz(rz)
+        action_aug = np.array([x, y, action[2], rz, action[4]])
+
+    return (pcl_aug, action_aug, goal_aug) if goal is not None and state is not None and action is not None else (pcl_aug, action_aug) if action is not None else (pcl_aug)
 
 def vis_grasp(state, next_state, action, offset=True):
     '''

@@ -60,7 +60,7 @@ class VINN_Img():
     def __init__(self, root_dir, chkpts):
         self.params = {}
         self.params['root_dir'] = root_dir  #'/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/' # This was changed
-        self.params['img_size'] = 624
+        self.params['img_size'] = 2048
         self.params['layer'] = 'avgpool'
         self.params['model'] = 'BYOL'
         self.params['representation_model_path'] = chkpts # This was changed

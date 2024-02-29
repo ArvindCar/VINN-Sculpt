@@ -5,6 +5,8 @@ import sys
 pointbert_path = '/'.join('/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT'.split('/')[:-3]) + '/point_cloud_embedding'
 sys.path.append(pointbert_path)
 from PointBERTwEncoder import PointBERTWithProjection
+# from pointBERT.tools import builder
+# from pointBERT.utils.config import cfg_from_yaml_file
 
 class Identity(nn.Module):
     '''
@@ -47,7 +49,7 @@ class Encoder():
             if(params['architecture'] == 'AlexNet'):
                 self.model = models.alexnet(pretrained=False)
 
-            encoder_state_dict = torch.load(params['root_dir'] + params['representation_model_path'], map_location=torch.device('cpu'))
+            encoder_state_dict = torch.load(params['root_dir'] + params['representation_model_path'], map_location=torch.device('cuda'))
             self.model.load_state_dict(encoder_state_dict['model_state_dict'])
             if(params['layer'] == 'avgpool'):
                 if(params['architecture'] == 'ResNet'):
@@ -57,9 +59,10 @@ class Encoder():
 
         if(params['model'] == 'PointBERT'):
             pointbert_path = '/'.join('/home/arvind/CMU/MAIL/VINN/VINN-Main/VINN-Sculpt/VINN-ACT'.split('/')[:-3]) + '/point_cloud_embedding'
-            self.model = PointBERTWithProjection(pointbert_path=pointbert_path)
-            encoder_state_dict = torch.load(params['root_dir'] + params['representation_model_path'], map_location=torch.device('cpu'))
+            self.model = PointBERTWithProjection(pointbert_path=pointbert_path, Train=False)
+            encoder_state_dict = torch.load(params['root_dir'] + params['representation_model_path']) #, map_location=torch.device('cpu'))
             self.model.load_state_dict(encoder_state_dict['model_state_dict'])
+            self.model.to('cuda')
             # self.model.fc = Identity()
 
         if(params['model'] == 'ImageNet'):
