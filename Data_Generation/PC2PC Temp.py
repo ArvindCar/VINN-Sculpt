@@ -45,7 +45,7 @@ def lab_color_crop(pcd_incoming):
 
 
 data_path = '/home/arvind/Clay_Data/Feb24_Discrete_Demos/Cone/Discrete/Train/' # Directory where all the collected data is
-data_save_path = '/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/PointClouds/Cone_all/'
+data_save_path = '/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/PointClouds/Dataset/Cone_all/test_data/'
 n_traj = 10
 n_rot_aug = 12
 # save_path_goal = '/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/PointClouds/X_all/New_Data/Goals'
@@ -59,53 +59,62 @@ for k in range(n_rot_aug*n_traj):
         if not os.path.exists(save_path_img):
             os.makedirs(save_path_img)
         traj_path = data_path + 'Trajectory' + str(i) + '/' 
-        states = [state for state in os.listdir(traj_path) if state.startswith("Raw_State")] 
+        states = [state for state in os.listdir(traj_path) if state.startswith("state")] 
         states.sort()
         actions_dict = {}
 
         for s, state in enumerate(states): # Iterates through states within a given trajextory
-            state_path = traj_path + state + '/'
+            state_path = traj_path + state 
 
             # The steps below are a modified version of Vision3D.fuse_point_clouds
-            pcl_vis = vis.Vision3D()
-            pc2 = o3d.io.read_point_cloud(state_path + 'pc_cam2.ply')
-            pc3 = o3d.io.read_point_cloud(state_path + 'pc_cam3.ply')
-            pc4 = o3d.io.read_point_cloud(state_path + 'pc_cam4.ply')
-            pc5 = o3d.io.read_point_cloud(state_path + 'pc_cam5.ply')
-            pointcloud = o3d.geometry.PointCloud()
-            points = pcl_vis.fuse_point_clouds( pc2, pc3, pc4, pc5, vis=False, no_transformation=True)
-            # pointcloud.points = o3d.utility.Vector3dVector(Points)
-            # pointcloud.colors = o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(Points), 1)))
+            # pcl_vis = vis.Vision3D()
+            # pc2 = o3d.io.read_point_cloud(state_path + 'pc_cam2.ply')
+            # pc3 = o3d.io.read_point_cloud(state_path + 'pc_cam3.ply')
+            # pc4 = o3d.io.read_point_cloud(state_path + 'pc_cam4.ply')
+            # pc5 = o3d.io.read_point_cloud(state_path + 'pc_cam5.ply')
+            # pointcloud = o3d.geometry.PointCloud()
+            state_unnormalized = np.load(state_path)
+            center = np.mean(state_unnormalized, axis=0)
+            # print(center)
+            # center[0] = 0.6
+            # center[1] = 0.0
+            # center = np.load(traj_path + 'pcl_center0' + '.npy')
+            # print(center)
+            # print(np.mean(points, axis = 0))
+            # time.sleep(3)
+            # # pointcloud.points = o3d.utility.Vector3dVector(Points)
+            # # pointcloud.colors = o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(Points), 1)))
             
             
-            # uniformly sample 2048 points from each point cloud
-            # points = np.asarray(pointcloud.points)
-            idxs = np.random.randint(0, len(points), size=2048)
-            points = points[idxs]
-            # pointcloud.points = o3d.utility.Vector3dVector(points)
-            # pointcloud.colors = o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(points), 1)))
-            # o3d.visualization.draw_geometries([pointcloud])
+            # # uniformly sample 2048 points from each point cloud
+            # # points = np.asarray(pointcloud.points)
+            # idxs = np.random.randint(0, len(points), size=2048)
+            # points = points[idxs]
+            # # pointcloud.points = o3d.utility.Vector3dVector(points)
+            # # pointcloud.colors = o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(points), 1)))
+            # # o3d.visualization.draw_geometries([pointcloud])
 
-            print("np center:", np.mean(points))
+
             if s != len(states) - 1:
                 action = np.load(traj_path + 'action' + str(s) + '.npy')
-            center = np.load(traj_path + 'pcl_center0' + '.npy')
-
+            # center = np.load(traj_path + 'pcl_center0' + '.npy')
+            # print(center)
             # points = points-center 
             # unscale and uncenter the state point cloud
-            state_unnormalized = points * 0.1 + center
+            # state_unnormalized = points * 0.1 + center
             goal_unnormalized = np.load(traj_path + 'new_goal_unnormalized.npy')
-
+            # print(np.mean(goal_unnormalized, axis = 0) - np.mean(state_unnormalized, axis = 0))
             
             rot = 360/n_rot_aug*j
-            state_aug, action_aug, goal_aug = augment_state_action(state_unnormalized, goal_unnormalized, center, action, rot, vis=False) 
-            state_aug = (state_aug-center) * 10
+            state_aug, action_aug, goal_aug = augment_state_action(state_unnormalized, goal_unnormalized, center, action, rot, vis=False, shift = [-0.02, 0.02]) 
+            state_aug = (state_aug - center) * 10
             goal_aug = (goal_aug - center) * 10
             # print(np.mean(state_aug, axis=0), np.mean(goal_aug, axis=0))
+
             # pointcloud.points = o3d.utility.Vector3dVector(state_aug)
             # pointcloud.colors = o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(state_aug), 1)))
             # pointcloud.points.extend(o3d.utility.Vector3dVector(goal_aug))
-            # pointcloud.colors.extend(o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(goal_aug), 1))))
+            # pointcloud.colors.extend(o3d.utility.Vector3dVector(np.tile(np.array([0, 1, 0]), (len(goal_aug), 1))))
 
             # o3d.visualization.draw_geometries([pointcloud])
             # Capture the PC

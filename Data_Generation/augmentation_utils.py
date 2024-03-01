@@ -54,7 +54,7 @@ def line_3d_point_set(points):
                       [6,7]])
     return new_points, lines
 
-def augment_state_action(state, goal, center, action, rot, vis=False):
+def augment_state_action(state, goal, center, action, rot, vis=False, shift = [0, 0]):
     '''
     Given a rotation about the z-axis, an action and state/goal/center
     pointclouds, return the state and goal pointclouds rotated by this 
@@ -129,7 +129,7 @@ def augment_state_action(state, goal, center, action, rot, vis=False):
             unit_circle_og_grasp = (new_action[0] - center[0], new_action[1] - center[1])
         # if augmenting for dataset creation, no need to apply correction
         else:
-            unit_circle_og_grasp = (action[0] - center[0], action[1] - center[1])
+            unit_circle_og_grasp = (action[0] - (center[0] + shift[0]), action[1] - (center[1] + shift[1]))
 
     
         rot_original = math.degrees(math.atan2(unit_circle_og_grasp[1], unit_circle_og_grasp[0]))
@@ -139,14 +139,14 @@ def augment_state_action(state, goal, center, action, rot, vis=False):
         # NOTE: doesn't work slightly for grasps at edge of the clay (slight height variation)
         new_unit_circle_grasp = (unit_circle_radius*math.cos(math.radians(rot_new)), unit_circle_radius*math.sin(math.radians(rot_new)))
         
-        new_global_grasp = (center[0] + new_unit_circle_grasp[0], center[1] + new_unit_circle_grasp[1])
+        new_global_grasp = ((center[0] + shift[0]) + new_unit_circle_grasp[0], (center[1] + shift[1]) + new_unit_circle_grasp[1])
         x = new_global_grasp[0]
         y = new_global_grasp[1]
         rz = action[3] + rot
         rz = wrap_rz(rz)
         action_aug = np.array([x, y, action[2], rz, action[4]])
 
-    return (pcl_aug, action_aug, goal_aug) if goal is not None and state is not None and action is not None else (pcl_aug, action_aug) if action is not None else (pcl_aug)
+    return (pcl_aug, action_aug, goal_aug) if goal is not None and state is not None and action is not None else (pcl_aug, action_aug) if state is not None else (action_aug)
 
 def vis_grasp(state, next_state, action, offset=True):
     '''
