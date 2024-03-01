@@ -60,7 +60,7 @@ class VINN_Img():
     def __init__(self, root_dir, chkpts):
         self.params = {}
         self.params['root_dir'] = root_dir  #'/home/arvindcar/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/' # This was changed
-        self.params['img_size'] = 2048
+        self.params['img_size'] = 642
         self.params['layer'] = 'avgpool'
         self.params['model'] = 'BYOL'
         self.params['representation_model_path'] = chkpts # This was changed
@@ -129,7 +129,7 @@ class VINN_Img():
         img_PIL = img_PIL.crop((410, 0, 1600, 697))
         img_tensor = self.preprocess(img_PIL)
         img_PIL.close()
-        img_embedding = self.encoder.encode(img_tensor)
+        img_embedding = self.encoder.encode(img_tensor)[0]
         next_action = self.calculate_nearest_neighbors(img_embedding, self.train_dataset, 10)
         next_action = np.array(next_action)
         return next_action
