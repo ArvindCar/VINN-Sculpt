@@ -88,6 +88,7 @@ class VINN_Img():
         img = pcl_vis.fuse_point_clouds(pc2, pc3, pc4, pc5, vis=False, no_transformation=False)
         # np.save(self.params['root_dir'] + '/' + 'CurrentState.npy', points)
         # img = np.load(self.params['root_dir'] + '/' + 'CurrentState.npy')
+        
         if vis:
             pointcloud = pointcloud = o3d.geometry.PointCloud()
             pointcloud.points = o3d.utility.Vector3dVector(img)
@@ -95,6 +96,7 @@ class VINN_Img():
             pointcloud.points.extend(o3d.utility.Vector3dVector(goal))
             pointcloud.colors.extend(o3d.utility.Vector3dVector(np.tile(np.array([0, 0, 1]), (len(goal), 1))))
             o3d.visualization.draw_geometries([pointcloud])
+
         img_tensor = torch.tensor(img) 
         goal_tensor = torch.tensor(goal)
         img_embedding = self.encoder.encode(img_tensor)[0]
