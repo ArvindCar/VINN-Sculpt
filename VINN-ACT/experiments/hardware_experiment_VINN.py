@@ -11,7 +11,7 @@ import robomail.vision as vis
 from frankapy import FrankaArm
 from distance_metrics import *
 from scipy.spatial.transform import Rotation
-from x_nn_sculpt import VINN_Img
+from x_pc_nn_sculpt import VINN_Img
 
 
 '''
@@ -103,12 +103,16 @@ def experiment_loop(fa, cam2, cam3, cam4, cam5, pcl_vis, save_path, goal, done_q
     chkpts_dir = 'chkpts/BYOL_100_X_batch_30.pt'
     baseline = VINN_Img(root_dir, chkpts_dir)
 
-
+    exec_times = []
+    process_dict = []
     for i in range(12): # maximum number of actions allowed (CAN BE ADJUSTED!)
-
+        print("Action:",i)
+        start_exec = time.time()
         # generate the next action given the observation and goal and convert to the robot's coordinate frame
         pred_action_sequence = [] # TODO: fill this in with respective action sequence prediction model
-        pred_action = baseline.next_action(pc2, pc3, pc4, pc5) # TODO: include a parameter to execute N steps before replanning
+        pred_action = baseline.next_action(pc2, pc3, pc4, pc5, goal) # TODO: include a parameter to execute N steps before replanning
+        end_exec = time.time()
+        exec_times.append(end_exec - start_exec)
         # unnorm_a = (pred_action + 1)/2.0 # NOTE: this step is for the model to output actions in the range [-1, 1], if the model outputs actions in the range [0, 1], this step is not necessary
         # unnorm_a = unnorm_a * (a_maxs5d - a_mins5d) + a_mins5d
         unnorm_a = pred_action
@@ -154,9 +158,10 @@ def experiment_loop(fa, cam2, cam3, cam4, cam5, pcl_vis, save_path, goal, done_q
         print("\nChamfer Distance: ", cd)
         print("Earth Mover's Distance: ", earthmovers)
         print("Hausdorff Distance: ", hausdorff_dist)
-
+        curr_dict = {'n_action': i, 'chamfer_distance': cd, 'earth_movers_distance': earthmovers, 'Hausdorff Distance:': hausdorff_dist}
+        process_dict.append(curr_dict)
         # exit loop early if the goal is reached
-        if earthmovers < 0.01 or cd < 0.01:
+        if earthmovers < 0.06 or cd < 0.06:
             break
 
         # alternate break scenario --> if the past 3 actions have not resulted in a decent change in the emd or cd, break
@@ -168,9 +173,13 @@ def experiment_loop(fa, cam2, cam3, cam4, cam5, pcl_vis, save_path, goal, done_q
     end_time = time.time()
     
     # create and save a dictionary of the experiment results
-    results_dict = {'n_actions': n_action, 'time_to_completion': end_time - start_time, 'chamfer_distance': cd, 'earth_movers_distance': emd}
+    results_dict = {'n_actions': n_action, 'time_to_completion': end_time - start_time, 'chamfer_distance': cd, 'earth_movers_distance': earthmovers, 'Hausdorff Distance:': hausdorff_dist}
     with open(save_path + '/results.txt', 'w') as f:
         f.write(str(results_dict))
+    with open(save_path + '/progress.txt', 'w') as f:
+        f.write(str(process_dict))
+    with open(save_path + '/exec_times.txt', 'w') as f:
+        f.write(str(exec_times))
 
 # VIDEO THREAD
 def video_loop(cam_pipeline, save_path, done_queue):

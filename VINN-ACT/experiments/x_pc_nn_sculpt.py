@@ -9,7 +9,7 @@ import open3d as o3d
 from PIL import Image
 import torchvision.transforms as T
 
-class VINN_Img():
+class VINN_PC():
     
     def dist_metric(self, x,y):
         return(torch.norm(x-y).item())
