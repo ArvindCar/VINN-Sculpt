@@ -27,7 +27,7 @@ def iterate_folders_and_load_np_files(root_dir, file_name):
             act_dict = json.load(action_file)
             # print(act_dict['0000.npy'][0])
             # print(folder_name)
-            state = '0002.npy'
+            state = '0000.jpg'
             x.append(act_dict[state][0])
             y.append(act_dict[state][1])
             z.append(act_dict[state][2])
@@ -39,7 +39,7 @@ def iterate_folders_and_load_np_files(root_dir, file_name):
 
 
 # Specify the root directory containing the folders
-root_directory = "/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/PointClouds/Dataset/Cone_all/test_data"
+root_directory = '/home/arvind/CMU/MAIL/VINN/VINN-Main/Data/Images/X_all/New_Data/X_img_new_shifted'
 
 # Specify the name of the NumPy file you want to load from each folder
 desired_file_name = "labels.json"

@@ -1,5 +1,5 @@
-python /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/representation_models/BYOL.py --batch_size 6 \
---root_dir /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-ACT/ \
+python /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-Sculpt/representation_models/BYOL.py --batch_size 6 \
+--root_dir /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/VINN-Sculpt/ \
 --folder /home/aesee/CMU/MAIL_Lab/VINN/VINN-Sculpt/X_Datasets \
 --dataset X_Datasets \
 --extension X \

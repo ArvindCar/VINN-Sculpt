@@ -1,0 +1,9 @@
+X_chkpts/*
+!X_chkpts/.gitkeep
+X_Datasets/*
+!X_Datasets/.gitkeep
+wandb/*
+!wandb/.gitkeep
+VINN-Sculpt/representation_data/*
+!VINN-Sculpt/representation_data/.gitkeep
+
