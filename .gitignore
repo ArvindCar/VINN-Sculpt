@@ -6,4 +6,5 @@ wandb/*
 !wandb/.gitkeep
 VINN-Sculpt/representation_data/*
 !VINN-Sculpt/representation_data/.gitkeep
-
+VINN-Sculpt/chkpts/*
+!VINN-Sculpt/chkpts/.gitkeep
